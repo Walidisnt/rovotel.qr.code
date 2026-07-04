@@ -98,6 +98,11 @@
   .envelope-zone{
     cursor:pointer;
     user-select:none;
+    transition:opacity .3s ease;
+  }
+  .envelope-zone.locked{
+    opacity:.45;
+    cursor:not-allowed;
   }
   .envelope-wrap{
     position:relative;
@@ -125,12 +130,13 @@
     position:absolute;
     left:12px;
     right:12px;
-    bottom:-64px;
+    bottom:-40px;
     height:70px;
     background:var(--paper);
     border-radius:6px;
     box-shadow:0 -4px 14px rgba(0,0,0,0.35);
-    transition:bottom .6s cubic-bezier(.2,.9,.3,1.2);
+    opacity:0;
+    transition:bottom .6s cubic-bezier(.2,.9,.3,1.2), opacity .3s ease;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -139,6 +145,7 @@
     font-weight:700;
     font-size:20px;
     letter-spacing:2px;
+    pointer-events:none;
   }
   .envelope-flap{
     position:absolute;
@@ -158,6 +165,7 @@
   }
   .envelope-wrap.open .card-peek{
     bottom:-8px;
+    opacity:1;
   }
   .seal{
     position:absolute;
@@ -249,14 +257,14 @@
 
   <div class="sep">ensuite</div>
 
-  <div class="envelope-zone" id="envelope-zone">
+  <div class="envelope-zone locked" id="envelope-zone">
     <div class="envelope-wrap" id="envelope">
-      <div class="card-peek" id="card-peek">?</div>
+      <div class="card-peek" id="card-peek"></div>
       <div class="envelope-back"></div>
       <div class="envelope-flap"></div>
       <div class="seal">🎁</div>
     </div>
-    <div class="hint" id="envelope-hint">Touchez l'enveloppe pour découvrir votre cadeau</div>
+    <div class="hint" id="envelope-hint">Laissez d'abord votre avis Google pour débloquer votre cadeau 🔒</div>
   </div>
 
   <div class="reveal" id="reveal">
@@ -273,6 +281,7 @@
 <script>
 (function(){
   var STORAGE_KEY = 'rovotel_gift_code';
+  var UNLOCK_KEY = 'rovotel_review_clicked';
 
   function generateCode(){
     var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -300,11 +309,28 @@
   var codeEl = document.getElementById('gift-code');
   var cardPeek = document.getElementById('card-peek');
   var copyBtn = document.getElementById('copy-btn');
+  var googleBtn = document.getElementById('google-review-btn');
 
   var opened = false;
+  var unlocked = localStorage.getItem(UNLOCK_KEY) === '1';
+
+  function unlock(){
+    if (unlocked) return;
+    unlocked = true;
+    localStorage.setItem(UNLOCK_KEY, '1');
+    zone.classList.remove('locked');
+    hint.textContent = "Touchez l'enveloppe pour découvrir votre cadeau";
+  }
+
+  if (unlocked) {
+    zone.classList.remove('locked');
+    hint.textContent = "Touchez l'enveloppe pour découvrir votre cadeau";
+  }
+
+  googleBtn.addEventListener('click', unlock);
 
   zone.addEventListener('click', function(){
-    if (opened) return;
+    if (!unlocked || opened) return;
     opened = true;
 
     var code = getOrCreateCode();
