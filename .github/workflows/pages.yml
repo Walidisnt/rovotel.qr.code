@@ -6,7 +6,7 @@ on:
       - main
       - claude/rovotel-avis-deployment-x89g8v
     paths:
-      - 'rovotel-avis/index.html'
+      - 'rovotel-avis/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
