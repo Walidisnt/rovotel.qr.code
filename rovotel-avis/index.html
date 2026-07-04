@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rovotel — Votre avis, votre cadeau</title>
+<style>
+  :root{
+    --gold:#c9a35c;
+    --gold-light:#e8d5a8;
+    --ink:#1b1f27;
+    --paper:#faf7f2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:'Georgia','Times New Roman',serif;
+    background:radial-gradient(ellipse at top, #2a2f3a 0%, #14171d 70%);
+    color:var(--paper);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .card{
+    width:100%;
+    max-width:440px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border:1px solid rgba(201,163,92,0.35);
+    border-radius:20px;
+    padding:36px 28px 32px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  }
+  .logo{
+    font-size:14px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:6px;
+  }
+  h1{
+    font-size:26px;
+    font-weight:400;
+    margin-bottom:18px;
+    color:#fff;
+  }
+  p.lead{
+    font-size:15px;
+    line-height:1.6;
+    color:#d8d4cc;
+    margin-bottom:26px;
+  }
+  .stars{
+    font-size:22px;
+    letter-spacing:4px;
+    color:var(--gold);
+    margin-bottom:22px;
+  }
+  .btn{
+    display:inline-block;
+    width:100%;
+    padding:15px 20px;
+    border-radius:12px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:15px;
+    font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+    border:none;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-google{
+    background:linear-gradient(135deg,#c9a35c,#e8d5a8);
+    color:#1b1f27;
+    box-shadow:0 8px 20px rgba(201,163,92,0.35);
+    margin-bottom:16px;
+  }
+  .btn-google:active{transform:scale(0.98);}
+  .sep{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#6b6f78;
+    font-size:12px;
+    margin:22px 0;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .sep::before,.sep::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:rgba(255,255,255,0.12);
+  }
+  .envelope-zone{
+    cursor:pointer;
+    user-select:none;
+  }
+  .envelope-wrap{
+    position:relative;
+    width:180px;
+    height:130px;
+    margin:0 auto 18px;
+  }
+  .envelope-back{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(160deg,#3a3f4c,#252a34);
+    border-radius:10px;
+    border:1px solid rgba(201,163,92,0.4);
+    overflow:hidden;
+  }
+  .envelope-back::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    background:
+      linear-gradient(135deg, transparent 49.6%, rgba(201,163,92,0.25) 50%, transparent 50.4%),
+      linear-gradient(-135deg, transparent 49.6%, rgba(201,163,92,0.25) 50%, transparent 50.4%);
+  }
+  .card-peek{
+    position:absolute;
+    left:12px;
+    right:12px;
+    bottom:-64px;
+    height:70px;
+    background:var(--paper);
+    border-radius:6px;
+    box-shadow:0 -4px 14px rgba(0,0,0,0.35);
+    transition:bottom .6s cubic-bezier(.2,.9,.3,1.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--ink);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:2px;
+  }
+  .envelope-flap{
+    position:absolute;
+    top:0;left:0;right:0;
+    height:66px;
+    background:linear-gradient(160deg,#4a5063,#2f3542);
+    clip-path:polygon(0 0, 100% 0, 50% 78%);
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    transform-origin:top center;
+    transition:transform .5s cubic-bezier(.4,0,.2,1);
+    border:1px solid rgba(201,163,92,0.4);
+    border-bottom:none;
+  }
+  .envelope-wrap.open .envelope-flap{
+    transform:rotateX(180deg);
+  }
+  .envelope-wrap.open .card-peek{
+    bottom:-8px;
+  }
+  .seal{
+    position:absolute;
+    top:38px;left:50%;
+    transform:translate(-50%,0);
+    width:34px;height:34px;
+    background:radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold) 70%);
+    border-radius:50%;
+    box-shadow:0 2px 6px rgba(0,0,0,0.4);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+    color:#3a2c0d;
+    transition:opacity .3s ease;
+    z-index:2;
+  }
+  .envelope-wrap.open .seal{opacity:0;}
+  .hint{
+    font-size:13px;
+    color:var(--gold-light);
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    letter-spacing:.5px;
+  }
+  .reveal{
+    display:none;
+    margin-top:22px;
+    animation:fadein .5s ease;
+  }
+  .reveal.show{display:block;}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .reveal p{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:13px;
+    color:#d8d4cc;
+    margin-bottom:10px;
+  }
+  .code-box{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:rgba(201,163,92,0.1);
+    border:1.5px dashed var(--gold);
+    border-radius:12px;
+    padding:14px 16px;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  .code-value{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:3px;
+    color:var(--gold-light);
+  }
+  .copy-btn{
+    background:transparent;
+    border:1px solid var(--gold);
+    color:var(--gold-light);
+    border-radius:8px;
+    padding:6px 10px;
+    font-size:12px;
+    cursor:pointer;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  .copy-btn:active{transform:scale(0.96);}
+  footer{
+    margin-top:24px;
+    font-size:11px;
+    color:#5c606a;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Rovotel</div>
+  <h1>Merci de votre séjour</h1>
+  <div class="stars">★ ★ ★ ★ ★</div>
+  <p class="lead">
+    Votre avis compte énormément pour nous. Partagez votre expérience sur
+    Google et recevez une carte cadeau surprise à faire valoir directement
+    à la réception de l'hôtel.
+  </p>
+
+  <a class="btn btn-google" id="google-review-btn"
+     href="https://search.google.com/local/writereview?placeid=ChIJJVfPTFfpyRIR8AZAN9rpUrI"
+     target="_blank" rel="noopener noreferrer">
+    ⭐ Laisser un avis Google
+  </a>
+
+  <div class="sep">ensuite</div>
+
+  <div class="envelope-zone" id="envelope-zone">
+    <div class="envelope-wrap" id="envelope">
+      <div class="card-peek" id="card-peek">?</div>
+      <div class="envelope-back"></div>
+      <div class="envelope-flap"></div>
+      <div class="seal">🎁</div>
+    </div>
+    <div class="hint" id="envelope-hint">Touchez l'enveloppe pour découvrir votre cadeau</div>
+  </div>
+
+  <div class="reveal" id="reveal">
+    <p>Voici votre code cadeau unique, à présenter à la réception :</p>
+    <div class="code-box">
+      <span class="code-value" id="gift-code">------</span>
+      <button class="copy-btn" id="copy-btn">Copier</button>
+    </div>
+  </div>
+
+  <footer>Rovotel · 3 Rue du Douard, 13740 Le Rove</footer>
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'rovotel_gift_code';
+
+  function generateCode(){
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var out = '';
+    var random = new Uint32Array(6);
+    (window.crypto || window.msCrypto).getRandomValues(random);
+    for (var i = 0; i < 6; i++){
+      out += chars[random[i] % chars.length];
+    }
+    return 'RVT-' + out;
+  }
+
+  function getOrCreateCode(){
+    var existing = localStorage.getItem(STORAGE_KEY);
+    if (existing) return existing;
+    var fresh = generateCode();
+    localStorage.setItem(STORAGE_KEY, fresh);
+    return fresh;
+  }
+
+  var envelope = document.getElementById('envelope');
+  var zone = document.getElementById('envelope-zone');
+  var hint = document.getElementById('envelope-hint');
+  var reveal = document.getElementById('reveal');
+  var codeEl = document.getElementById('gift-code');
+  var cardPeek = document.getElementById('card-peek');
+  var copyBtn = document.getElementById('copy-btn');
+
+  var opened = false;
+
+  zone.addEventListener('click', function(){
+    if (opened) return;
+    opened = true;
+
+    var code = getOrCreateCode();
+    cardPeek.textContent = '🎁';
+
+    envelope.classList.add('open');
+    hint.textContent = 'Votre carte cadeau apparaît...';
+
+    setTimeout(function(){
+      codeEl.textContent = code;
+      reveal.classList.add('show');
+      hint.textContent = 'Merci pour votre confiance !';
+    }, 550);
+  });
+
+  copyBtn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var code = codeEl.textContent;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(function(){
+        copyBtn.textContent = 'Copié ✓';
+        setTimeout(function(){ copyBtn.textContent = 'Copier'; }, 1500);
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
