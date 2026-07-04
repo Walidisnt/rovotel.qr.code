@@ -11,16 +11,10 @@ réception.
 
 Le site est hébergé gratuitement sur GitHub Pages, servi directement depuis
 ce dépôt (dossier `rovotel-avis/`) via le workflow
-`.github/workflows/pages.yml`. Toute modification poussée sur la branche
-`main` (fichier `rovotel-avis/index.html`) republie automatiquement le site
-— aucune action manuelle n'est nécessaire pour les mises à jour futures.
-
-> Étape ponctuelle requise (une seule fois) : dans les paramètres du dépôt
-> GitHub, **Settings → Pages → Build and deployment → Source**, sélectionner
-> **GitHub Actions**. Cette bascule doit être faite par un compte
-> administrateur du dépôt (le jeton automatique de l'environnement ne peut
-> pas activer Pages pour la première fois). Une fois ce réglage fait, le
-> site se déploie tout seul à chaque push.
+`.github/workflows/pages.yml`. Toute modification poussée sur les branches
+`main` ou `claude/rovotel-avis-deployment-x89g8v` republie automatiquement
+le site — aucune action manuelle n'est nécessaire pour les mises à jour
+futures.
 
 ## Contenu du dépôt
 
