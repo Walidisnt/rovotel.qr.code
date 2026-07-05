@@ -315,27 +315,19 @@
   var unlocked = localStorage.getItem(UNLOCK_KEY) === '1';
 
   function unlock(){
-    if (unlocked) return;
     unlocked = true;
     localStorage.setItem(UNLOCK_KEY, '1');
     zone.classList.remove('locked');
-    hint.textContent = "Touchez l'enveloppe pour découvrir votre cadeau";
   }
 
-  if (unlocked) {
-    zone.classList.remove('locked');
-    hint.textContent = "Touchez l'enveloppe pour découvrir votre cadeau";
-  }
-
-  googleBtn.addEventListener('click', unlock);
-
-  zone.addEventListener('click', function(){
+  function openEnvelope(){
     if (!unlocked || opened) return;
     opened = true;
 
     var code = getOrCreateCode();
     cardPeek.textContent = '🎁';
 
+    envelope.scrollIntoView({behavior: 'smooth', block: 'center'});
     envelope.classList.add('open');
     hint.textContent = 'Votre carte cadeau apparaît...';
 
@@ -344,7 +336,19 @@
       reveal.classList.add('show');
       hint.textContent = 'Merci pour votre confiance !';
     }, 550);
+  }
+
+  if (unlocked) {
+    zone.classList.remove('locked');
+    hint.textContent = "Touchez l'enveloppe pour découvrir votre cadeau";
+  }
+
+  googleBtn.addEventListener('click', function(){
+    unlock();
+    setTimeout(openEnvelope, 400);
   });
+
+  zone.addEventListener('click', openEnvelope);
 
   copyBtn.addEventListener('click', function(e){
     e.stopPropagation();
