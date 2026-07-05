@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - NexusdeSynthese
       - claude/rovotel-avis-deployment-x89g8v
   workflow_dispatch:
 
